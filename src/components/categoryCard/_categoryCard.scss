@@ -1,0 +1,44 @@
+@import "../../styles/variables";
+
+.card-wrapper {
+  background-color: $white;
+  width: 304px;
+  height: 295px;
+  box-shadow: 0px 4px 24px #00000014;
+  border-radius: 4px;
+  transition: all;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in;
+
+  .numberofphotos-wrapper {
+    position: relative;
+    div {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background-color: $grey;
+      padding: 5px 12px;
+      color: white;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 400;
+    }
+    img {
+      width: 100%;
+      border-radius: 4px 4px 0px 0px;
+    }
+  }
+
+  p {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 16px;
+    font-weight: 400;
+    vertical-align: middle;
+  }
+}
+
+.card-wrapper:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px #00000014;
+}

@@ -1,0 +1,52 @@
+@import "../../styles/variables";
+
+.category-cards-wrapper {
+  p {
+    color: $black;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 40px;
+  }
+  .category-cards-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    position: relative;
+    margin-bottom: 20px;
+
+    input {
+      border: 1px solid $grey;
+      padding: 12px 30px;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    span {
+      position: absolute;
+      left: 8px;
+    }
+  }
+
+  @media screen and (max-width: 1430px) {
+    .category-cards-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 1070px) {
+    .category-cards-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media screen and (max-width: 710px) {
+    .category-cards-list {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+}

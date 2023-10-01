@@ -1,0 +1,12 @@
+@import "./global.scss";
+@import "./variables.scss";
+@import "../components/header/header";
+@import "../components/category/category";
+@import "../components/categoryCard/categoryCard";
+@import "../components/gallery/gallery";
+@import "../components/imageCard/imageCard";
+@import "../components/category/addCategory/addCategoryPortal";
+@import "../components/addCard/addcard";
+@import "../components/gallery/addPhoto/addPhotoPortal";
+@import "../components/gallery/fullImagePortal/fullImagePortal";
+@import "../components/loading/loading";

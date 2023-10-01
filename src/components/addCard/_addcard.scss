@@ -1,0 +1,25 @@
+.add-card-wrapper {
+  width: 304px;
+  height: 295px;
+  box-shadow: 0px 4px 24px #00000014;
+  border-radius: 4px;
+  padding: 118px 0px;
+  background-color: $white;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+}
+
+.add-card-wrapper:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px #00000014;
+}
