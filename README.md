@@ -11,7 +11,7 @@ This website was built with ReactJS and SCSS inside Vite.
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/robo311/photogallery-page
+   git clone https://github.com/robo311/photogallery-bart
     ```
    
 2. Go inside the file
