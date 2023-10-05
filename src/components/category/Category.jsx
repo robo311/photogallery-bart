@@ -7,16 +7,16 @@ import Loading from "../loading/Loading";
 import Header from "../header/Header";
 import { AiOutlineSearch } from "react-icons/ai";
 
-function Category({ setError }) {
+function Category({ setError, setNewCategories, newCategories }) {
   const [showModal, setShowModal] = useState(false);
   const [categoryValue, setCategoryValue] = useState("");
-  const [newCategories, setNewCategories] = useState([]);
+  
   const [galleryData, setGalleryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   const fetchUrl = "http://api.programator.sk/gallery";
-
+  
   const handleGalleryData = async () => {
     try {
       const response = await fetch(fetchUrl);

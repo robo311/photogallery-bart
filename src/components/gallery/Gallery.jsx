@@ -9,7 +9,7 @@ import FullImagePortal from "./fullImagePortal/FullImagePortal";
 import Loading from "../loading/Loading";
 import Header from "../header/Header";
 
-function Gallery({ setError }) {
+function Gallery({ setError, setNewCategories, newCategories }) {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -18,20 +18,31 @@ function Gallery({ setError }) {
   const [newImageData, setNewImageData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { galleryPath } = useParams();
-
+  
   const url = `http://api.programator.sk/gallery/${galleryPath}`;
+ 
   const handleImagesData = async () => {
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(`Error ${response.status}. Gallery does not exist.`);
-        } else {
-          throw new Error(`Error ${response.status}. ${response.statusText}.`);
+      if(galleryPath){
+        
+        const galleryPathInNewCategory = newCategories.some(category => category.includes(galleryPath))
+
+        if(galleryPathInNewCategory){
+          setTimeout(() => setLoading(false), 200);
+          return;
         }
+
+        const response = await fetch(url);
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error(`Error ${response.status}. Gallery does not exist.`);
+          } else {
+            throw new Error(`Error ${response.status}. ${response.statusText}.`);
+          }
+        }
+        const data = await response.json();
+        setImageData(data.images);
       }
-      const data = await response.json();
-      setImageData(data.images);
       setTimeout(() => setLoading(false), 200);
     } catch (error) {
       setError(error);
@@ -52,15 +63,12 @@ function Gallery({ setError }) {
 
   const imageElement = imageData?.map((data, index) => {
     const image = `http://api.programator.sk/images/304x295/${data.fullpath}`;
-    const lowResImage = `http://api.programator.sk/images/20x20/${data.fullpath}`;
-
-    console.log(lowResImage);
+ 
     return (
       <ImageCard
         key={data.name}
         data={data}
         image={image}
-        lowResImage={lowResImage}
         index={index}
         onClick={() => setCurrentImageIndex(index)}
         setShowImageModal={setShowImageModal}

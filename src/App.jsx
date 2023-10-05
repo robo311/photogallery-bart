@@ -6,6 +6,7 @@ import ErrorPage from "./components/errorPage/ErrorPage";
 
 function App() {
   const [error, setError] = useState(null);
+  const [newCategories, setNewCategories] = useState([]);
 
   return (
     <>
@@ -14,10 +15,10 @@ function App() {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Category setError={setError} />} />
+            <Route path="/" element={<Category setError={setError} setNewCategories={setNewCategories} newCategories={newCategories} />} />
             <Route
               path="/:galleryPath"
-              element={<Gallery setError={setError} />}
+              element={<Gallery setError={setError} setNewCategories={setNewCategories} newCategories={newCategories}/>}
             />
           </Routes>
         </BrowserRouter>
