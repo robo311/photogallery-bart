@@ -23,13 +23,14 @@ function Category({ setError }) {
 
   const fetchUrl = "http://api.programator.sk/gallery";
 
-  const requestBody = {
-    name: categoryValue,
-  };
-
+  const removeSpacesCategoryValue = categoryValue.replace(/\s/g, "")
+  
   //Pridávanie kategórií
   const handleAddCategory = async () => {
     try {
+      const requestBody = {
+        name: removeSpacesCategoryValue,
+      };
       const response = await fetch(fetchUrl, {
         method: "POST",
         headers: {
@@ -64,7 +65,6 @@ function Category({ setError }) {
       const response = await fetch(categoryUrl, {
         method: "DELETE",
       });
-
       //Získanie mena kategórie
       const splitUrl = categoryUrl.split("/");
       const categoryName = splitUrl[splitUrl.length - 1];
