@@ -16,7 +16,7 @@ This website was built with ReactJS and SCSS inside Vite.
    
 2. Go inside the file
    ```bash
-   cd photogallery-page
+   cd photogallery-bart
    ```
    
 4. Install node modules.
