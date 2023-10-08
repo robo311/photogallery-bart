@@ -59,29 +59,30 @@ function Gallery({ setError }) {
   //Pridanie nového obrázku
   const handleAddNewImage = async () => {
     try {
-      if(uploadedImage.length > 0){
-
-        const formData = new FormData();
+      if (uploadedImage.length > 0) {
+        console.log(uploadedImage);
         for (let i = 0; i < uploadedImage.length; i++) {
+          const formData = new FormData();
           formData.append("images", uploadedImage[i], uploadedImage[i].name);
-        }
-  
-        const response = await fetch(url, {
-          method: "POST",
-          body: formData,
-        });
-        
-        //Kontrola odozvy
-        if (response.ok) {
-          setUploadedImage([])
-          setAlertMessage({
-            message: `Image successfully added!`,
-            successful: true,
+          const response = await fetch(url, {
+            method: "POST",
+            body: formData,
           });
-          setRefreshFetching(true);
-          setShowUploadModal(false);
-        } else {
-          throw new Error(`Error ${response.status}. ${response.statusText}.`);
+
+          //Kontrola odozvy
+          if (response.ok) {
+            setUploadedImage([]);
+            setAlertMessage({
+              message: `Image successfully added!`,
+              successful: true,
+            });
+            setRefreshFetching(true);
+            setShowUploadModal(false);
+          } else {
+            throw new Error(
+              `Error ${response.status}. ${response.statusText}.`
+            );
+          }
         }
       }
     } catch (error) {
@@ -171,6 +172,7 @@ function Gallery({ setError }) {
             {showUploadModal &&
               createPortal(
                 <AddPhotoPortal
+                  setAlertMessage={setAlertMessage}
                   handleAddNewImage={handleAddNewImage}
                   uploadedImage={uploadedImage}
                   setUploadedImage={setUploadedImage}

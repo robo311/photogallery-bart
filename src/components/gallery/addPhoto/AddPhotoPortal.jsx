@@ -7,12 +7,18 @@ function AddPhotoPortal({
   setUploadedImage,
   uploadedImage,
   handleAddNewImage,
+  setAlertMessage
 }) {
   const [dragOver, setDragOver] = useState(false);
   
   //Upload fotiek
   const handlePictureUpload = (e) => {
-    setUploadedImage([...uploadedImage, e.target.files[0]]);
+    
+    if(e.target.files[0].size < 3000000){
+      setUploadedImage([...uploadedImage, e.target.files[0]]);
+    }else{
+      setAlertMessage({message: "The file is too big", successful: false})
+    }
   };
 
   //Drag and drop funkcia
@@ -24,8 +30,15 @@ function AddPhotoPortal({
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i].getAsFile();
-      setUploadedImage([...uploadedImage, file]);
+     
+      if(file.size < 3000000){
+        setUploadedImage([...uploadedImage, file]);
+      }else{
+        setAlertMessage({message: "The file is too big", successful: false})
+      }
+      
     }
+    
   };
 
   //Vymazanie uploadnutých fotiek
