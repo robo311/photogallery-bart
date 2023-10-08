@@ -12,8 +12,11 @@ function CategoryCard({ item, image, gallery, handleCategoryRemove }) {
   const handleNumberOfImages = async () => {
     if (gallery) {
       const response = await fetch(gallery);
-      const galleryData = await response.json();
-      setNumberOfImages(galleryData?.images.length);
+      
+      if(response.ok){
+        const galleryData = await response.json();
+        setNumberOfImages(galleryData?.images.length);
+      }
     }
   };
 

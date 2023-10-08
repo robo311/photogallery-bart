@@ -97,6 +97,7 @@ function Category({ setError }) {
       if (!response.ok) {
         throw new Error(`Error ${response.status}. ${response.statusText}.`);
       }
+      
       const data = await response.json();
       setGalleryData(data.galleries);
       setTimeout(() => setLoading(false), 300);
@@ -116,7 +117,7 @@ function Category({ setError }) {
     .map((item, index) => {
       const image = `http://api.programator.sk/images/304x228/${item.image?.fullpath}`;
       const gallery = `http://api.programator.sk/gallery/${item?.path}`;
-
+      
       return (
         <CategoryCard
           key={index}
