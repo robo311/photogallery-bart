@@ -30,11 +30,15 @@ function AddPhotoPortal({
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i].getAsFile();
-     
-      if(file.size < 3000000){
-        setUploadedImage([...uploadedImage, file]);
+      if(file.type.startsWith("image/")){
+
+        if(file.size < 3000000){
+          setUploadedImage([...uploadedImage, file]);
+        }else{
+          setAlertMessage({message: "The file is too big", successful: false})
+        }
       }else{
-        setAlertMessage({message: "The file is too big", successful: false})
+        setAlertMessage({message: "You can only upload images!", successful: false})
       }
       
     }
