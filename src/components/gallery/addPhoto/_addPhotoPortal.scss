@@ -15,7 +15,7 @@
   .modal-image-wrapper {
     background-color: $white;
     width: 560px;
-    height: 499px;
+    height: 550px;
     border-radius: 16px;
     padding: 48px;
 
@@ -56,7 +56,7 @@
 
       .drag-and-drop-wrapper {
         max-width: 464px;
-        height: 258px;
+        height: 300px;
         background-color: transparent;
         border: 1px dashed #dddddd;
         border-radius: 4px;
@@ -89,24 +89,45 @@
           background-color: transparent;
           cursor: pointer;
           margin-top: 24px;
+          margin-bottom: 15px;
         }
 
         .uploaded-image-wrapper {
           position: relative;
+          display: flex;
+          gap: 5px;
+          width: 400px;
+          overflow-x: auto;
 
-          .close-uploaded-image {
-            position: absolute;
-            z-index: 2;
-            top: 5px;
-            right: 5px;
-            cursor: pointer;
+          
+          .uploaded-image-preview{
+            min-width: 70px;
+            max-width: 70px;
+            height: 70px;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            position: relative;
+            
+            .close-uploaded-image {
+              position: absolute;
+              z-index: 2;
+              top: 5px;
+              right: 5px;
+              cursor: pointer;
+              background-color: $white;
+              border-radius: 100%;
+              padding: 1px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            img {
+              width: 100%;
+              height: auto;
+            }
           }
 
-          img {
-            width: 220px;
-            max-height: 250px;
-            border-radius: 4px;
-          }
         }
       }
 

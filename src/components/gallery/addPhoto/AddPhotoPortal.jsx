@@ -9,25 +9,31 @@ function AddPhotoPortal({
   handleAddNewImage,
 }) {
   const [dragOver, setDragOver] = useState(false);
-
+  
+  //Upload fotiek
   const handlePictureUpload = (e) => {
-    setUploadedImage(URL.createObjectURL(e.target.files[0]));
+    setUploadedImage([...uploadedImage, e.target.files[0]]);
   };
 
+  //Drag and drop funkcia
   const handleDragAndDrop = (e) => {
     e.preventDefault();
+    const files = Array.from(e.dataTransfer.items).filter(
+      (item) => item.kind === "file"
+    );
 
-    if (e.dataTransfer.items) {
-      [...e.dataTransfer.items].forEach((item, i) => {
-        if (item.kind === "file") {
-          const file = item.getAsFile();
-          imageFiles.push(file);
-          setUploadedImage([...uploadedImage], URL.createObjectURL(file));
-        }
-      });
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i].getAsFile();
+      setUploadedImage([...uploadedImage, file]);
     }
   };
 
+  //Vymazanie uploadnutých fotiek
+  const handleRemoveUploadedImg = (indexToRemove) => {
+    const updatedUploadedImages = uploadedImage.filter((_, index) => index !== indexToRemove)
+    setUploadedImage(updatedUploadedImages)
+  }
+  
   return (
     <div className="background-image-modal-overlay">
       <div className="modal-image-wrapper">
@@ -42,10 +48,13 @@ function AddPhotoPortal({
             className={`${dragOver ? "drag-over" : ""} drag-and-drop-wrapper`}
             onDrop={(e) => handleDragAndDrop(e)}
             onDragEnter={() => setDragOver(true)}
-            onDragOver={() => setDragOver(true)}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragOver(true);
+            }}
             onDragLeave={() => setDragOver(false)}
           >
-            {!uploadedImage ? (
+            {uploadedImage?.length >= 0 ? (
               <>
                 <BsImage size={24} />
                 <h4>Sem presuňte fotky</h4>
@@ -63,15 +72,23 @@ function AddPhotoPortal({
             ) : (
               ""
             )}
-            {uploadedImage && (
+            {uploadedImage?.length > 0 && (
               <div className="uploaded-image-wrapper">
-                <div
-                  onClick={() => setUploadedImage(null)}
-                  className="close-uploaded-image"
-                >
-                  <AiOutlineClose />
-                </div>
-                <img src={uploadedImage} alt={uploadedImage} />
+                {uploadedImage.map((image, index) => (
+                  <div key={index} className="uploaded-image-preview">
+                    <div
+                      onClick={() => handleRemoveUploadedImg(index)}
+                      className="close-uploaded-image"
+                    >
+                      <AiOutlineClose />
+                    </div>
+                    <img
+                      key={index}
+                      src={URL.createObjectURL(image)}
+                      alt={`Uploaded img ${index}`}
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>

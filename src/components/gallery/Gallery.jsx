@@ -3,41 +3,43 @@ import { createPortal } from "react-dom";
 import { Link, useParams } from "react-router-dom";
 import ImageCard from "../imageCard/imageCard";
 import AddCard from "../addCard/AddCard";
-import AddImagePortal from "../gallery/addPhoto/AddPhotoPortal";
+import AddPhotoPortal from "../gallery/addPhoto/AddPhotoPortal";
 import { BsArrowLeft } from "react-icons/bs";
 import FullImagePortal from "./fullImagePortal/FullImagePortal";
 import Loading from "../loading/Loading";
 import Header from "../header/Header";
+import Alert from "../alert/Alert";
 
-function Gallery({ setError, setNewCategories, newCategories }) {
+function Gallery({ setError }) {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState([]);
   const [imageData, setImageData] = useState([]);
-  const [newImageData, setNewImageData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshFetching, setRefreshFetching] = useState(false);
+  const [alertMessage, setAlertMessage] = useState({
+    name: "",
+    successful: false,
+  });
   const { galleryPath } = useParams();
-  
+
   const url = `http://api.programator.sk/gallery/${galleryPath}`;
- 
+
+  //Získanie dát z API
   const handleImagesData = async () => {
     try {
-      if(galleryPath){
-        
-        const galleryPathInNewCategory = newCategories.some(category => category.includes(galleryPath))
-
-        if(galleryPathInNewCategory){
-          setTimeout(() => setLoading(false), 200);
-          return;
-        }
-
+      if (galleryPath) {
         const response = await fetch(url);
         if (!response.ok) {
           if (response.status === 404) {
-            throw new Error(`Error ${response.status}. Gallery does not exist.`);
+            throw new Error(
+              `Error ${response.status}. Gallery does not exist.`
+            );
           } else {
-            throw new Error(`Error ${response.status}. ${response.statusText}.`);
+            throw new Error(
+              `Error ${response.status}. ${response.statusText}.`
+            );
           }
         }
         const data = await response.json();
@@ -51,19 +53,69 @@ function Gallery({ setError, setNewCategories, newCategories }) {
 
   useEffect(() => {
     handleImagesData();
-  }, [url]);
+    setTimeout(() => setRefreshFetching(false), 100);
+  }, [url, refreshFetching]);
 
-  const handleAddNewImage = () => {
-    if (uploadedImage) {
-      setNewImageData((current) => [...current, uploadedImage]);
+  //Pridanie nového obrázku
+  const handleAddNewImage = async () => {
+    try {
+      if(uploadedImage.length > 0){
+
+        const formData = new FormData();
+        for (let i = 0; i < uploadedImage.length; i++) {
+          formData.append("images", uploadedImage[i], uploadedImage[i].name);
+        }
+  
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData,
+        });
+        
+        //Kontrola odozvy
+        if (response.ok) {
+          setUploadedImage([])
+          setAlertMessage({
+            message: `Image successfully added!`,
+            successful: true,
+          });
+          setRefreshFetching(true);
+          setShowUploadModal(false);
+        } else {
+          throw new Error(`Error ${response.status}. ${response.statusText}.`);
+        }
+      }
+    } catch (error) {
+      setError(error);
     }
-    setShowUploadModal(false);
-    setUploadedImage(null);
+  };
+
+  //Vymazávanie obrázkov
+  const handleImageRemove = async (imageId) => {
+    try {
+      const urlToDelete = `${url}/${imageId}`;
+
+      const response = await fetch(urlToDelete, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setAlertMessage({
+          message: `Image successfully deleted!`,
+          successful: true,
+        });
+        setRefreshFetching(true);
+        setShowUploadModal(false);
+      } else {
+        throw new Error(`Error ${response.status}. ${response.statusText}.`);
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const imageElement = imageData?.map((data, index) => {
     const image = `http://api.programator.sk/images/304x295/${data.fullpath}`;
- 
+
     return (
       <ImageCard
         key={data.name}
@@ -72,16 +124,7 @@ function Gallery({ setError, setNewCategories, newCategories }) {
         index={index}
         onClick={() => setCurrentImageIndex(index)}
         setShowImageModal={setShowImageModal}
-      />
-    );
-  });
-
-  const addedImagesElement = newImageData?.map((item, index) => {
-    return (
-      <ImageCard
-        key={index}
-        uploadedImage={item}
-        onClick={() => setCurrentImageIndex(index)}
+        handleImageRemove={handleImageRemove}
       />
     );
   });
@@ -104,9 +147,16 @@ function Gallery({ setError, setNewCategories, newCategories }) {
             </div>
             <div className="images-list">
               {imageElement}
-              {addedImagesElement}
               <AddCard setShowUploadModal={setShowUploadModal} />
             </div>
+
+            {alertMessage.message && (
+              <Alert
+                alertMessage={alertMessage}
+                setAlertMessage={setAlertMessage}
+              />
+            )}
+
             {showImageModal &&
               createPortal(
                 <FullImagePortal
@@ -120,7 +170,7 @@ function Gallery({ setError, setNewCategories, newCategories }) {
 
             {showUploadModal &&
               createPortal(
-                <AddImagePortal
+                <AddPhotoPortal
                   handleAddNewImage={handleAddNewImage}
                   uploadedImage={uploadedImage}
                   setUploadedImage={setUploadedImage}
